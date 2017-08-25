@@ -45,7 +45,7 @@ export default class App extends React.Component {
 ReactDOM.render(
     <App/>,
     document.getElementById('root'),
-    ()=>{console.log(process)}
+    ()=>{console.log("渲染完成...")}
 );
 
 if(module.hot)

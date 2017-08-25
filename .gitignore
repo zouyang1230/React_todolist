@@ -1,0 +1,4 @@
+# Numerous always-ignore extensions
+*.txt
+bin
+node_modules

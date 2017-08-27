@@ -1,6 +1,13 @@
 
 
 
+//接收的数据的数据验证
+let propTypes = {
+    leftCount:PT.number,
+    showClearButton: PT.bool,
+    onClearCompleted:PT.func
+}
+
 export default class Footer extends React.Component {
     constructor(props)
     {
@@ -9,10 +16,26 @@ export default class Footer extends React.Component {
     }
     
     render() {
+
+        let {leftCount,showClearButton,onClearCompleted} = this.props;
+
+        let clearBtn = null;
+
+        if(showClearButton){
+            clearBtn = (
+                <button 
+                    className="clear-completed" 
+                    onClick = {onClearCompleted}
+                >
+                    clear all completed
+                </button>
+            );
+        }
+
         return (
             <footer className="footer">
                 <span className="todo-count">
-                    <strong>{0}</strong>
+                    <strong>{leftCount}</strong>
                     <span>item left</span>
                 </span>
                 <ul className="filters">
@@ -26,9 +49,7 @@ export default class Footer extends React.Component {
                         <a href="#/completed">Completed</a>
                     </li>
                 </ul>
-                <button className="clear-completed">
-                    clear all completed
-                </button>
+                {clearBtn}
             </footer>
         );
     }

@@ -18,7 +18,8 @@ export default class App extends React.Component {
             todosData:[ //声明todo的数据结构，存放todo的一个数组，成员是对象，对象有id、value、和状态布尔值
                 //3个字段{id,value,hasCompleted},
             ],
-            inputVal:'' //用于改变input为受控组件时获取输入的值
+            inputVal:'', //用于改变input为受控组件时获取输入的值
+            view:'all'
         }
 
         //给所有事件绑定this
@@ -28,6 +29,7 @@ export default class App extends React.Component {
         this.inputChange = this.inputChange.bind(this);
         this.onToggle = this.onToggle.bind(this);
         this.toggleAll = this.toggleAll.bind(this);
+        this.changeView = this.changeView.bind(this);
 
     }
 
@@ -142,15 +144,21 @@ export default class App extends React.Component {
         console.info(todo.id);
     }
 
+    //footer上的3个视图状态回调函数，这个函数后面需要传给footer组件的
+    changeView(view)
+    {
+        this.setState({view});
+    }
+
 
     
     render() {
 
         //先取出上面设置的事件，方便下面使用
-        let {handleKeyDownPost,onDestroy,onClearCompleted,inputChange,toggleAll,onToggle} = this;
+        let {handleKeyDownPost,onDestroy,onClearCompleted,inputChange,toggleAll,onToggle,changeView} = this;
 
         //拿到state，更新Item
-        let {todosData,inputVal} = this.state;
+        let {todosData,inputVal,view} = this.state;
 
         let items = null,
             footer = null,
@@ -159,11 +167,24 @@ export default class App extends React.Component {
         //声明统计未完成的变量
         let leftCount = todosData.length;
 
-        //构造Item
-        items = todosData.map((elt, i)=>{      //elt就是我们的todosData的每一项对象
-
+        //基于view值去过滤todo，以便让footer上的3个视图状态按钮能够显示不同状态的todo
+        items = todosData.filter(elt=>{
+            
             //遍历是否勾选 只要是完成的，那么上面变量leftCount就--
             if(elt.hasCompleted) leftCount--;
+            switch (view) {
+                case 'active':
+                    return !elt.hasCompleted;
+                case 'completed':
+                    return elt.hasCompleted;
+                default:
+                    return true;    //view为all时
+            }
+        });
+
+        //构造Item
+        items = items.map((elt, i)=>{      //elt就是我们的todosData的每一项对象
+
             return (
                 <Item 
                     {...{
@@ -198,7 +219,9 @@ export default class App extends React.Component {
                     {...{
                         leftCount,
                         showClearButton: leftCount < todosData.length,   //判断并显示clear all completed按钮，剩余的小于总数，说明有被勾选为completed，则显示。
-                        onClearCompleted
+                        onClearCompleted,
+                        changeView,
+                        view
                     }}
                 />
             );
@@ -224,6 +247,10 @@ export default class App extends React.Component {
         );
     }
 }
+
+
+
+
 
 
 ReactDOM.render(

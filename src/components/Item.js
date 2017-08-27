@@ -4,7 +4,8 @@
 let propTypes = {
     todo:PT.object,   //因为我在webpack.config内已经申明好了pt，所以可以直接用PT
     onDestroy:PT.func,
-    onToggle:PT.func
+    onToggle:PT.func,
+    itemEditDone:PT.func
 }
 
 export default class Item extends React.Component {
@@ -12,6 +13,53 @@ export default class Item extends React.Component {
     {
         super(props);
        
+        //让Item可编辑，我们设置一个state来操作
+        this.state = {
+            inEdit:false,
+            val:''
+        }
+
+        //绑定this
+        this.onEdit = this.onEdit.bind(this);
+        this.onBlur = this.onBlur.bind(this);
+        this.onEnter = this.onEnter.bind(this);
+        this.itemEditDone = this.itemEditDone.bind(this);
+        this.inputChange = this.inputChange.bind(this);
+    }
+
+    //事件回调函数，让state的inEdit改变布尔值
+    onEdit()
+    {
+        //实现取出当前todo的value
+        let {value} = this.props.todo;
+
+        this.setState({
+            inEdit:true,
+            val:value
+        });
+    }
+
+    //修改item的事件   失去焦点和按下回车时改变todo的value
+    onBlur(){
+        this.itemEditDone();
+    }
+    onEnter(ev){
+        if(ev.keyCode !== 13) return;
+        this.itemEditDone();
+    }
+    itemEditDone()
+    {
+        //让输入框消失
+        this.setState({inEdit:false});
+        //开始保存修改的todo内容
+        let {itemEditDone,todo} = this.props;   //取出传递进来的itemEditDone函数,todo
+        itemEditDone(todo,this.state.val);
+    }
+
+    //定义一个修改本组件state的val的函数,用于受控组件值的修改
+    inputChange(ev)
+    {
+        this.setState({val:ev.target.value});
     }
     
     render() {
@@ -19,8 +67,20 @@ export default class Item extends React.Component {
         //取出todo
         let {onDestroy,todo,onToggle} = this.props;
 
+        let {inEdit,val} = this.state;
+
+        //className类名去控制li的class
+        let itemClassName = '';
+
+        //取出双击onEdit事件
+        let {onEdit,onBlur,onEnter,inputChange} = this;
+
+        if(inEdit){
+            itemClassName += 'editing';
+        }
+
         return (
-            <li>
+            <li className={itemClassName} >
                 <div className="view">
                     <input 
                         type="checkbox" 
@@ -28,14 +88,23 @@ export default class Item extends React.Component {
                         checked={todo.hasCompleted}
                         onChange={()=>{onToggle(todo)}}
                     />
-                    <label>
+                    <label
+                        onDoubleClick = {onEdit}
+                    >
                         {todo.value}
                     </label>
                     <button className="destroy"
                         onClick = { ev=>{onDestroy(todo)} }
                     ></button>
                 </div>
-                <input type="text" className="edit" />
+                <input 
+                    type="text" 
+                    className="edit" 
+                    value={val}
+                    onBlur={onBlur}
+                    onKeyDown={onEnter}
+                    onChange={inputChange}
+                />
             </li>
         );
     }

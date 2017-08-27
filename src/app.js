@@ -30,6 +30,7 @@ export default class App extends React.Component {
         this.onToggle = this.onToggle.bind(this);
         this.toggleAll = this.toggleAll.bind(this);
         this.changeView = this.changeView.bind(this);
+        this.itemEditDone = this.itemEditDone.bind(this);
 
     }
 
@@ -150,12 +151,26 @@ export default class App extends React.Component {
         this.setState({view});
     }
 
+    //用于传递给Item组件的事件，该事件Item的todo被双击时修改todo后的保存，保存就修改本组件的state
+    itemEditDone(todo,value)
+    {
+        let {todosData} = this.state;
+        //遍历去修改我们要修改的那个todo
+        todosData = todosData.map(elt=>{
+            if(todo.id === elt.id)
+            {
+                elt.value = value;
+            }
+            return elt;
+        });
+    }
+
 
     
     render() {
 
         //先取出上面设置的事件，方便下面使用
-        let {handleKeyDownPost,onDestroy,onClearCompleted,inputChange,toggleAll,onToggle,changeView} = this;
+        let {handleKeyDownPost,onDestroy,onClearCompleted,inputChange,toggleAll,onToggle,changeView,itemEditDone} = this;
 
         //拿到state，更新Item
         let {todosData,inputVal,view} = this.state;
@@ -169,9 +184,10 @@ export default class App extends React.Component {
 
         //基于view值去过滤todo，以便让footer上的3个视图状态按钮能够显示不同状态的todo
         items = todosData.filter(elt=>{
-            
+
             //遍历是否勾选 只要是完成的，那么上面变量leftCount就--
             if(elt.hasCompleted) leftCount--;
+
             switch (view) {
                 case 'active':
                     return !elt.hasCompleted;
@@ -190,7 +206,8 @@ export default class App extends React.Component {
                     {...{
                         onDestroy,  //每一个todo都有一个关闭按钮，所以传这个事件过去
                         todo:elt,    //todo的内容
-                        onToggle
+                        onToggle,
+                        itemEditDone
                     }}
 
                     key = {i}   //这个别忘了哦，不然会报错，遍历都要加，react内部机制diff算法会用

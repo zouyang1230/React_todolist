@@ -9,6 +9,7 @@ let propTypes = {
 }
 
 export default class Item extends React.Component {
+
     constructor(props)
     {
         super(props);
@@ -18,13 +19,14 @@ export default class Item extends React.Component {
             inEdit:false,
             val:''
         }
-
         //绑定this
         this.onEdit = this.onEdit.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onEnter = this.onEnter.bind(this);
         this.itemEditDone = this.itemEditDone.bind(this);
         this.inputChange = this.inputChange.bind(this);
+
+        this.isEsc = false; //用于onBlur onEnter 方法
     }
 
     //事件回调函数，让state的inEdit改变布尔值
@@ -36,14 +38,23 @@ export default class Item extends React.Component {
         this.setState({
             inEdit:true,
             val:value
+        },()=>{
+            this.refs.editInput.focus()
         });
     }
 
     //修改item的事件   失去焦点和按下回车时改变todo的value
     onBlur(){
+        if(this.isEsc === true) {this.isEsc=false; return;}
         this.itemEditDone();
     }
     onEnter(ev){
+        if(ev.keyCode === 27){
+            this.isEsc = true;
+            //console.info(this.isEsc);
+            this.setState({inEdit:false});//让输入框消失
+            return;
+        }
         if(ev.keyCode !== 13) return;
         this.itemEditDone();
     }
@@ -61,19 +72,25 @@ export default class Item extends React.Component {
     {
         this.setState({val:ev.target.value});
     }
+
+
     
     render() {
+
+        
         
         //取出todo
         let {onDestroy,todo,onToggle} = this.props;
 
         let {inEdit,val} = this.state;
 
-        //className类名去控制li的class
-        let itemClassName = '';
+        //定义一个className类名变量去控制li的class
+        let itemClassName = todo.hasCompleted?"completed":"";
 
         //取出双击onEdit事件
         let {onEdit,onBlur,onEnter,inputChange} = this;
+
+        //console.info(this.isEsc);
 
         if(inEdit){
             itemClassName += 'editing';
@@ -104,6 +121,7 @@ export default class Item extends React.Component {
                     onBlur={onBlur}
                     onKeyDown={onEnter}
                     onChange={inputChange}
+                    ref="editInput"
                 />
             </li>
         );

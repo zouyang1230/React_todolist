@@ -16,7 +16,9 @@ node server
 ```
 
 ### 在线预览本例 TodoList
-- [链接](http://todomvc.com/)
+- [链接](http://www.zouyang1230.com/project/todo/)
+![TodoMVC img](http://www.zouyang1230.com/project/todo/todo.jpg)
+
 
 
 

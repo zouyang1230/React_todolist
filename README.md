@@ -1,4 +1,4 @@
-# React_todolist
+﻿# React_todolist
 
 ![TodoMVC Logo](https://raw.githubusercontent.com/tastejs/todomvc/master/media/logo.png)
 
@@ -16,8 +16,8 @@ node server
 ```
 
 ### 在线预览本例 TodoList
-- [链接](http://www.zouyang1230.com/project/todo/)
-![TodoMVC img](http://www.zouyang1230.com/project/todo/todo.jpg)
+- [链接地址](http://www.zouyang1230.com/project/todo/)
+- ![TodoMVC img](http://www.zouyang1230.com/project/todo/todo.jpg)
 
 
 

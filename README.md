@@ -1,6 +1,6 @@
 ﻿# React_todolist
 
-![TodoMVC Logo](https://raw.githubusercontent.com/tastejs/todomvc/master/media/logo.png)
+![TodoMVC Logo](http://todomvc.com/site-assets/logo.svg)
 
 ### 何为 TODO MVC ？
 - [todoMVC官网](http://todomvc.com/)
@@ -16,8 +16,8 @@ node server
 ```
 
 ### 在线预览本例 TodoList
-- [链接地址](http://www.zouyang1230.com/project/todo/)
-- ![TodoMVC img](http://www.zouyang1230.com/project/todo/todo.jpg)
+- [链接地址](http://www.imzouyang.com/project/todo/)
+- ![TodoMVC img](http://www.imzouyang.com/project/todo/todo.jpg)
 
 
 
